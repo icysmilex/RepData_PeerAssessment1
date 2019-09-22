@@ -22,23 +22,28 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 
 ## Loading and preprocessing the data
+```r
 library(dplyr)
 library(ggplot2)
 library(knitr)
 activity <-read.csv('C:\\Users\\Sing_pei\\Documents\\R program\\activity.csv')
-
+```
 
 
 ## What is mean total number of steps taken per day?
+```r
 total_steps <- activity %>%
   group_by(date)%>%
   summarise(steps= sum(steps, na.rm = TRUE))
-
+```
 hist(total_steps$steps,main = "Total number of steps taken per day", xlab = "Total steps taken per day" , ylim = c(0,20), col = "darkgreen", breaks = seq(0,25000, by=2500))
 
+```r
 mean(total_steps$steps  , na.rm = T)
+```
+```r
 median(total_steps$steps, na.rm = T)
-
+```
 
 ## What is the average daily activity pattern?
 average<- activity %>%
@@ -50,13 +55,13 @@ plot(average$interval,average$steps, type="l",ylab="average steps per day", xlab
 average[which.max(average$steps), ]$interval
 
 ## Imputing missing values
+```r
 sum(is.na(activity$steps))
 
 mean <- activity %>%
   group_by(date)%>%
   summarise(steps= mean(steps, na.rm = TRUE))
 
-  
   
   
 mean<-na.omit(mean)
@@ -69,14 +74,20 @@ activity2$imputed_steps[is.na(activity2$imputed_steps)] <- imputed_mean
 total_imputed_steps <- activity2 %>%
   group_by(date)%>%
   summarise(imputed_steps= sum(imputed_steps))
+```
 
 hist(total_imputed_steps$imputed_steps,main = "Total number of steps taken per day", xlab = "Total steps taken per day" , ylim = c(0,30), col = "darkgreen", breaks = seq(0,25000, by=2500))
 
+```r
 mean(total_imputed_steps$imputed_steps)
-median(total_imputed_steps$imputed_steps)
+```
 
+```r
+median(total_imputed_steps$imputed_steps)
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```r
 activity$date <-as.Date(activity$date, '%Y-%m-%d')
 weekday<-weekdays(activity$date)
 activity<-cbind(activity,weekday)
@@ -91,5 +102,5 @@ activitylast<- activitylast %>%
   summarise(steps= mean(imputed_steps, na.rm =T))
 
 ggplot(activitylast, aes(interval, steps)) + geom_line() + facet_grid(day ~ .) + xlab("5-minute interval") + ylab("Number of steps")
-
+```
 
